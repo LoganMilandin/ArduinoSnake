@@ -8,6 +8,7 @@ Snake snake;
 Coordinate availableFoodPositions[NUM_LEDS];
 Coordinate food;
 bool gameOver = false;
+long frameDelay = 200;
 
 void setup() {
   FastLED.addLeds<WS2812, LED_PIN, GRB>(LEDs, NUM_LEDS);
@@ -33,7 +34,7 @@ void setup() {
 }
 
 void loop() {
-  delay(1000);
+  delay(frameDelay);
   if (gameOver) {
     return;
   }
@@ -56,7 +57,9 @@ ISR (PCINT2_vect) {
   // Serial.println("pressed");
   for (int i = 0; i < NUM_BUTTONS; i++) {
     if (digitalRead(buttonPins[i]) == LOW) {
-      handleButtonPressed(buttonPins[i]);
+      if (debounceCheck(i)) {
+        handleButtonPressed(buttonPins[i]);
+      }
     }
   }
 }
